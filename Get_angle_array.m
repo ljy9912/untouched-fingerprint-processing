@@ -2,7 +2,7 @@
 % 寻找角度和波长（频率）的函数
 
 function  [ angle_array , wavelength ,frequency ] = Get_angle_array(img,part_piece,extend)          
-    img_2 = my_histeq(img);
+    img_2 = img;
    
     height =size(img_2,1);
     width  = size (img_2,2);
