@@ -1,4 +1,4 @@
-function mask=seed_grow(im,block_size)%im为输入图像,block_size为分块大小
+function mask=segmentation(im,block_size)%im为输入图像,block_size为分块大小
     [row_num,col_num,~] = size(im);
     row_blk_num = floor(row_num/block_size);
     col_blk_num = floor(col_num/block_size);
