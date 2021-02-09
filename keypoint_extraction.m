@@ -1,12 +1,11 @@
-
-%2020.11.4  ---by nyx
-
-%%      ¶ÁÈëºÍÇ°¾°·Ö¸î
-
-    path = '2';                                                 %±íÊ¾µÚ¼¸ÕÅÍ¼Æ¬
-    im = imread('img/img1.jpg');
+% function img = keypoint_extraction(imgpath)
+function [img, result, mask, angle] = keypoint_extraction(imgpath)
+%UNTITLED æ­¤å¤„æ˜¾ç¤ºæœ‰å…³æ­¤å‡½æ•°çš„æ‘˜è¦
+%   æ­¤å¤„æ˜¾ç¤ºè¯¦ç»†è¯´æ˜
+    path = '2';                                                 %è¡¨ç¤ºç¬¬å‡ å¼ å›¾ç‰‡
+    im = imread(imgpath);
     img = rgb2gray(im);
-    backup_img = rgb2gray(imread('img/img1.jpg'));             %±¸ÓÃµÄimg
+    backup_img = rgb2gray(imread(imgpath));             %å¤‡ç”¨çš„img
     
     figure(1);
     subplot(1,3,1) , imshow(img);
@@ -29,13 +28,13 @@
         for  i  = 1 : floor(img_m/4)
             for j = 1:floor(img_n/4)
                 temp_img = img( (i-1)*4+1 : i*4 , (j-1)*4+1 : j*4 );
-                var_ori(i,j) = std2(temp_img);                            %·½²î
+                var_ori(i,j) = std2(temp_img);                            %æ–¹å·®
             end
         end
         
         var_ori =imbinarize(var_ori,5);
         
-        se = strel('disk',1);                                                       %¸¯Ê´ºÍÅòÕÍ
+        se = strel('disk',1);                                                       %è…èš€å’Œè†¨èƒ€
         var_process_1 = imerode(var_ori,se);
         se = strel('disk',13) ;                                         
         var_process_1 = imdilate(var_process_1,se);
@@ -82,7 +81,7 @@
         
         part_piece = 8;           
         extend = 16 ;
-    else                                            %Í¼ÏñÈı
+    else                                            %å›¾åƒä¸‰
         
         for  i  = 1 : floor(img_m/4)
             for j = 1:floor(img_n/4)
@@ -122,18 +121,18 @@
      
 %      imwrite(fore_pic,['output\',path,'_fore_pic.jpg']);
 
- %%  ·½Ïò³¡¹À¼Æ¡¢ÆµÂÊ³¡¹À¼Æ
+ %%  æ–¹å‘åœºä¼°è®¡ã€é¢‘ç‡åœºä¼°è®¡
     
     img_2 = fore_pic;                                          
-    img_2 = im2uint8(img_2);                                %Òª×ª»¯²»È»±¨´í
+    img_2 = im2uint8(img_2);                                %è¦è½¬åŒ–ä¸ç„¶æŠ¥é”™
 
     if (path~='3')
         [ angle_array , wavelength ,frequency ] = Get_angle_array (img_2,part_piece,extend);
     else
-        [ angle_array , wavelength ,frequency ] = Get_angle_array (backup_img,part_piece,extend,path);                  %frequency¾ØÕó ÊÇÎªÁË´«³öÆµÂÊÍ¼ÏÔÊ¾³öÀ´£¬Íê³ÉÌâÄ¿ÒªÇóµÄÍ¼Æ¬
+        [ angle_array , wavelength ,frequency ] = Get_angle_array (backup_img,part_piece,extend,path);                  %frequencyçŸ©é˜µ æ˜¯ä¸ºäº†ä¼ å‡ºé¢‘ç‡å›¾æ˜¾ç¤ºå‡ºæ¥ï¼Œå®Œæˆé¢˜ç›®è¦æ±‚çš„å›¾ç‰‡
     end
-        
-%% ·½Ïò³¡Æ½»¬´¦Àí    /   ÆµÂÊ(²¨³¤)³¡Æ½»¬´¦Àí
+    angle_not_smooothed = angle_array;
+%% æ–¹å‘åœºå¹³æ»‘å¤„ç†    /   é¢‘ç‡(æ³¢é•¿)åœºå¹³æ»‘å¤„ç†
 
     filter_g_wavelength= fspecial('Gaussian',[3,3],3);
     wavelength = imfilter(wavelength,filter_g_wavelength,'replicate','same');
@@ -154,9 +153,9 @@
     
     figure(2);
     imshow(backup_img);
-%     DrawDir(2,angle_array,part_piece,'r');              %»­³ö¼¹ÏßµÄ·½ÏòÀ´
+%     DrawDir(2,angle_array,part_piece,'r');              %ç”»å‡ºè„Šçº¿çš„æ–¹å‘æ¥
 
-%% Çó¼¹ÏßÔöÇ¿
+%% æ±‚è„Šçº¿å¢å¼º
 
     mask_new = imresize(mask, [floor(img_m/part_piece), floor(img_n/part_piece)], 'bicubic');
     mask_new = im2double(mask_new);
@@ -164,14 +163,14 @@
         se = strel('disk',2);
         mask_new = imerode(mask_new, se);
     end
-    mask_new = imbinarize(mask_new,0.6);                                                                        %³õÊ¼»¯¼¹ÏßÔöÇ¿µÄÃÉ°æ
+    mask_new = imbinarize(mask_new,0.6);                                                                        %åˆå§‹åŒ–è„Šçº¿å¢å¼ºçš„è’™ç‰ˆ
     
     img_enhancement = img_2;
     enhancement_pic = my_enhance(img_enhancement,mask_new,angle_array,wavelength,part_piece,extend);
 
     enhancement_max = max(max(enhancement_pic));
     enhancement_min = min(min(enhancement_pic));
-    enhancement_pic = (enhancement_pic-enhancement_min)/(enhancement_max-enhancement_min);                      %¹éÒ»»¯ÔöÇ¿ºóµÄÍ¼ÏñºÍÂË²¨´¦Àí
+    enhancement_pic = (enhancement_pic-enhancement_min)/(enhancement_max-enhancement_min);                      %å½’ä¸€åŒ–å¢å¼ºåçš„å›¾åƒå’Œæ»¤æ³¢å¤„ç†
     
     filter_g = fspecial('Gaussian',[4,4],8);
     enhancement_pic = imfilter(enhancement_pic, filter_g, 'replicate', 'same');
@@ -179,8 +178,22 @@
     
     figure(4);
     imshow(enhancement_pic);
-    [result, img] = keypoint_detection(enhancement_pic, mask);
+%     img = keypoint_detection(enhancement_pic, mask);
+    [img, result] = keypoint_detection(enhancement_pic, mask);
     figure(5);
     imshow(img, []);
-    
-%     imwrite(result,['output\',path,'_output_filter.jpg']);
+    index = round(result/16);
+    [num a] = size(result);
+    angle = [];
+    for i = 1:num
+        if index(i, 1)==0
+            index(i, 1)=1;
+        end
+        if index(i, 2)==0
+            index(i, 2)=1;
+        end
+        angle = cat(1, angle, angle_array(index(i, 1), index(i, 2)));
+    end
+    angle = angle/180*pi;
+end
+

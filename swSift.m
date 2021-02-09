@@ -8,8 +8,8 @@
 
 clear
 tic
-img1 = imread('scene.pgm');
-img2 = imread('book.pgm');
+img1 = imread('../img/img1.jpg');
+img2 = imread('../img/img2.jpg');
 [des1,loc1] = getFeatures(img1);
 [des2,loc2] = getFeatures(img2);
 matched = match(des1,des2);
