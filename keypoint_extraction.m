@@ -179,7 +179,7 @@ function [img, result, mask, angle] = keypoint_extraction(imgpath)
     figure(4);
     imshow(enhancement_pic);
 %     img = keypoint_detection(enhancement_pic, mask);
-    [img, result] = keypoint_detection(enhancement_pic, mask);
+    [img, result, mask] = keypoint_detection(enhancement_pic, mask);
     figure(5);
     imshow(img, []);
     index = round(result/16);

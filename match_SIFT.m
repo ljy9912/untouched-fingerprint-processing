@@ -6,7 +6,7 @@
 %   British Columbia.  For more information, refer to the file LICENSE
 %   that accompanied this distribution.
 
-function [ matched, dist ] = match( des1, des2 )
+function [ matched, dist ] = match_SIFT( des1, des2 )
 % Function: Match descriptors from the 1st to the 2nd, return matched index.
 % matched vectors' angles from the nearest to second nearest neighbor is less than distRatio.
 distRatio = 0.6;
