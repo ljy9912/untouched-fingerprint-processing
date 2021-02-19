@@ -42,7 +42,7 @@ function C = MCC_encode(T,mask)
                         end
                     end
                     if max(G_S(:)) == 0
-                        C_m(i,j,:) =[0,0,0,0,0,0];
+                        C_m(i,j,:) = [0,0,0,0,0,0];
                     else
                         G_S(SD_idx:end)=[];
                         G_D(SD_idx:end,:)=[];
