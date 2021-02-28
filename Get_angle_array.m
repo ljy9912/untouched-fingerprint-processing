@@ -19,10 +19,12 @@ function  [ angle_array , wavelength ,frequency ] = Get_angle_array(img,part_pie
     for i = 1 : div_height
         for j = 1 : div_width
             Area = double(img_2(part_piece*(i-1) + 1 : part_piece*i , part_piece*(j-1) + 1 : part_piece*j));
-            if (((i-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (i*part_piece +(extend-part_piece) / 2>height) || ((j-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (j*part_piece +(extend-part_piece) / 2>width))              %之前写成div_height不对
+            if (((i-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (i*part_piece +(extend-part_piece) / 2>height) ...
+                || ((j-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (j*part_piece +(extend-part_piece) / 2>width)) %之前写成div_height不对
                 Area_abs = abs(fftshift(fft2(padarray(Area,[(extend-part_piece) / 2,(extend-part_piece) / 2],'both','replicate'))));
             else
-                Area_abs = abs(fftshift(fft2(   img_2( (i-1)*part_piece - (extend-part_piece) / 2 +1 : i*part_piece + (extend-part_piece) / 2  , (j-1)*part_piece - (extend-part_piece) / 2 +1 : j*part_piece + (extend-part_piece) / 2   ) )));
+                Area_abs = abs(fftshift(fft2(   img_2( (i-1)*part_piece - (extend-part_piece) / 2 +1 : i*part_piece ...
+                    + (extend-part_piece)/2, (j-1)*part_piece - (extend-part_piece)/2 +1 : j*part_piece + (extend-part_piece)/2))));
             end
 
             [ posx,posy ] = find (Area_abs == max(max(Area_abs)));
