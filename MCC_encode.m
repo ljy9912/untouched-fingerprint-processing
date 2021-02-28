@@ -2,12 +2,13 @@ function C = MCC_encode(T,mask)
     m_num = size(T,1);
     [M,N] = size(mask);
     N_S = 10;
-    N_D = 6;
+    N_D = 7;
     R = round(M/7);
-    o_s = 42/3;
+    o_s = round(R/N_S);
     o_d = 2*pi/9;
-    u = 1/150;
-    C = zeros(m_num,N_S*N_S*N_D);
+    u = 1/(15*N_S);
+    C_value = zeros(m_num,N_S*N_S*N_D);
+    C_angle = zeros(m_num,1);
     invaild_m_num = 0;
     for n=1:m_num
         m = T(n,:);
@@ -42,7 +43,7 @@ function C = MCC_encode(T,mask)
                         end
                     end
                     if max(G_S(:)) == 0
-                        C_m(i,j,:) = [0,0,0,0,0,0];
+                        C_m(i,j,:) = zeros(1,N_D);
                     else
                         G_S(SD_idx:end)=[];
                         G_D(SD_idx:end,:)=[];
@@ -52,20 +53,22 @@ function C = MCC_encode(T,mask)
                         C_m(i,j,:) = G;
                     end
                 else
-                    C_m(i,j,:) = [-1,-1,-1,-1,-1,-1];
+                    C_m(i,j,:) = -ones(1,N_D);
                 end
             end
         end
         if size(neighbor,2) < 2 || valid_cell_num < 0.75*pi*N_S.^2/4 || size(neighbor,2) > 20
             invaild_m_num = invaild_m_num + 1;
         else
-            C(n-invaild_m_num,:) = C_m(:);
+            C_value(n-invaild_m_num,:) = C_m(:);
+            C_angle(n-invaild_m_num) = T(n,3);
         end
     end
-    C(m_num-invaild_m_num+1:m_num,:) = [];
-    C_ = C;
-    C(C==-1) = 0;
-    C_(C_>=0) = 1;
-    C_(C_==-1) = 0;
-    C(:,:,2) = C_;
+    C_value(m_num-invaild_m_num+1:m_num,:) = [];
+    C_angle(m_num-invaild_m_num+1:m_num) = [];
+    C_vaild = C_value;
+    C_value(C_value==-1) = 0;
+    C_vaild(C_vaild>=0) = 1;
+    C_vaild(C_vaild==-1) = 0;
+    C = [C_value,C_vaild,C_angle];
 end
