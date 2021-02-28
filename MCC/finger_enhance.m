@@ -1,4 +1,4 @@
-% ÓÃGaborÂË²¨Æ÷½øÐÐ¼¹ÏßÔöÇ¿µÄº¯Êý
+% ç”¨Gaboræ»¤æ³¢å™¨è¿›è¡Œè„Šçº¿å¢žå¼ºçš„å‡½æ•°
 function [enhancement_pic] = finger_enhance(img,mask,angle_array,wavelength,part_piece,extend)
     img_m = size(img, 1);        
     img_n = size(img, 2);
@@ -31,7 +31,7 @@ function [enhancement_pic] = finger_enhance(img,mask,angle_array,wavelength,part
     end
     enhancement_max = max(max(enhancement_pic));
     enhancement_min = min(min(enhancement_pic));
-    enhancement_pic = (enhancement_pic-enhancement_min)/(enhancement_max-enhancement_min);  %¹éÒ»»¯
+    enhancement_pic = (enhancement_pic-enhancement_min)/(enhancement_max-enhancement_min);  %å½’ä¸€åŒ–
     
     filter_g = fspecial('Gaussian',[4,4],8);
     enhancement_pic = imfilter(enhancement_pic, filter_g, 'replicate', 'same');
