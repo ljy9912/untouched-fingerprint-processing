@@ -1,5 +1,5 @@
      
-% Ñ°ÕÒ½Ç¶ÈºÍ²¨³¤£¨ÆµÂÊ£©µÄº¯Êı
+% å¯»æ‰¾è§’åº¦å’Œæ³¢é•¿ï¼ˆé¢‘ç‡ï¼‰çš„å‡½æ•°
 
 function  [ angle_array , wavelength ,frequency ] = Get_angle_array(img,part_piece,extend)          
     img_2 = img;
@@ -20,7 +20,7 @@ function  [ angle_array , wavelength ,frequency ] = Get_angle_array(img,part_pie
         for j = 1 : div_width
             Area = double(img_2(part_piece*(i-1) + 1 : part_piece*i , part_piece*(j-1) + 1 : part_piece*j));
             if (((i-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (i*part_piece +(extend-part_piece) / 2>height) ...
-                || ((j-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (j*part_piece +(extend-part_piece) / 2>width)) %Ö®Ç°Ğ´³Édiv_height²»¶Ô
+                || ((j-1)*part_piece - (extend-part_piece) / 2 +1 < 0) || (j*part_piece +(extend-part_piece) / 2>width)) %ä¹‹å‰å†™æˆdiv_heightä¸å¯¹
                 Area_abs = abs(fftshift(fft2(padarray(Area,[(extend-part_piece) / 2,(extend-part_piece) / 2],'both','replicate'))));
             else
                 Area_abs = abs(fftshift(fft2(   img_2( (i-1)*part_piece - (extend-part_piece) / 2 +1 : i*part_piece ...
@@ -33,7 +33,7 @@ function  [ angle_array , wavelength ,frequency ] = Get_angle_array(img,part_pie
             [ temp,pos_max ] = sort(Area_abs(:),'descend');
             [ x1,y1 ] = ind2sub(size(Area_abs),pos_max(1));
             [ x2,y2 ] = ind2sub(size(Area_abs),pos_max(2));
-            angle = atand((y1-y2)/(x1-x2));                   %ÒÔ¶ÈÎªµ¥Î»µÄ·´ÕıÇĞ
+            angle = atand((y1-y2)/(x1-x2));                   %ä»¥åº¦ä¸ºå•ä½çš„åæ­£åˆ‡
             temp_wave = k / sqrt( (x1 - x2)^2 + (y1 - y2)^2 );
             temp_frequency =  sqrt( (x1 - x2)^2 + (y1 - y2)^2 );
             angle_array( i , j ) = angle;
