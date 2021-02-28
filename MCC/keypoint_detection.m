@@ -2,21 +2,21 @@ function [I4, result, mask] = keypoint_detection(I, mask)
 m=size(I,1);
 n=size(I,2);
 
-%È¥³ýºÚÉ«µÄ¹Âµº
+%åŽ»é™¤é»‘è‰²çš„å­¤å²›
 I1=bwareaopen(I,40);
-%È¥³ý°×É«µÄ¹Âµº
+%åŽ»é™¤ç™½è‰²çš„å­¤å²›
 I1=~I1;
 I1=bwareaopen(I1,60);
 I1=~I1;
-%Ï¸»¯
+%ç»†åŒ–
 I2=~I1;
 I2=bwmorph(I2,'thin',inf);
 I2=~I2;
-%È¥³ýÃ«´Ì
+%åŽ»é™¤æ¯›åˆº
 I3=~I2;
 len=10;
 endpoint=ones(3,3,8)*(-1);
-%µÚÒ»¸ö¶ËµãµÄ½á¹¹
+%ç¬¬ä¸€ä¸ªç«¯ç‚¹çš„ç»“æž„
 endpoint(1,1,1)=0;
 endpoint(2,1,1)=1;
 endpoint(2,2,1)=1;
@@ -24,7 +24,7 @@ endpoint(3,1,1)=0;
 endpoint(:,:,2)=rot90(endpoint(:,:,1));
 endpoint(:,:,3)=rot90(endpoint(:,:,2));
 endpoint(:,:,4)=rot90(endpoint(:,:,3));
-%µÚÎå¸ö¶ËµãµÄ½á¹¹
+%ç¬¬äº”ä¸ªç«¯ç‚¹çš„ç»“æž„
 endpoint(1,1,5)=1;
 endpoint(2,2,5)=1;
 endpoint(:,:,6)=rot90(endpoint(:,:,5));
@@ -45,7 +45,7 @@ for i=1:len
 end
 I3=I3|I_ends;
 I3=~I3;
-%Çó¶Ëµã¡¢·Ö²æµã
+%æ±‚ç«¯ç‚¹ã€åˆ†å‰ç‚¹
 I4=~I3;
 neighbour=[[-1,-1];[0,-1];[1,-1];[1,0];[1,1];[0,1];[-1,1];[-1,0];[-1,-1]]; 
 CN=zeros(m,n);
@@ -53,7 +53,7 @@ for i=2:m-1
     for j=2:n-1
         cn=0;
         if I4(i,j)~=0
-            %¼ÆËã
+            %è®¡ç®—
             for k=1:8
                 x1=i+neighbour(k,1);
                 y1=j+neighbour(k,2);
@@ -78,26 +78,26 @@ end_pos=find(endP==1);
 branch_pos=find(branchP==1);
 [branchx,branchy]=ind2sub(size(I4),branch_pos);
 
-%¼ÆËãÕâÐ©µãÖÐÈÎÒâÁ½µãµÄ¾àÀë,set a threshold
+%è®¡ç®—è¿™äº›ç‚¹ä¸­ä»»æ„ä¸¤ç‚¹çš„è·ç¦»,set a threshold
 mindis0=round(m/110);
 if 1
     dis0=pdist2([endx,endy],[endx,endy]);
     notfit0=find(dis0>0 & dis0<mindis0);
     [fx0,fy0]=ind2sub(size(dis0),notfit0);
-    %ÕÒµ½²»·ûºÏµÄµã£¬ÖÃÁã
+    %æ‰¾åˆ°ä¸ç¬¦åˆçš„ç‚¹ï¼Œç½®é›¶
     endx(fx0)=[];
     endy(fy0)=[];
     
 end
 
-%·Ö²æµã
-%¼ÆËãÕâÐ©µãÖÐÈÎÒâÁ½µãµÄ¾àÀë,set a threshold
+%åˆ†å‰ç‚¹
+%è®¡ç®—è¿™äº›ç‚¹ä¸­ä»»æ„ä¸¤ç‚¹çš„è·ç¦»,set a threshold
 mindis1=round(m/60);
 if 1
     dis1=pdist2([branchx,branchy],[branchx,branchy]);
     notfit1=find(dis1>0 & dis1<mindis1);
     [fx1,fy1]=ind2sub(size(dis1),notfit1);
-    %ÕÒµ½²»·ûºÏµÄµã£¬ÖÃÁã
+    %æ‰¾åˆ°ä¸ç¬¦åˆçš„ç‚¹ï¼Œç½®é›¶
     branchx(fx1)=[];
     branchy(fy1)=[];
 end
