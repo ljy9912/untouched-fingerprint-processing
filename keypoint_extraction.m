@@ -1,27 +1,22 @@
-% function img = keypoint_extraction(imgpath)
 function [img, mask, T] = keypoint_extraction(imgpath)
-%UNTITLED 此处显示有关此函数的摘要
-%   此处显示详细说明
     im = im2double(imread(imgpath));
-%     img = rgb2gray(im);
     [img_m,img_n,~] = size(im);
     [bw,mask] = finger2bw(im);
-%     img(mask==0)=0;
     fore_pic = ~bw;
 %     figure,imshow(fore_pic)
 
     part_piece = 2*round(img_m/120);
     extend = 2*part_piece ;               
 
- %%  方向场估计、频率场估计                                        
+%% 方向场估计、波长场估计                                        
     img_2 = im2double(fore_pic);
     [ angle_array , wavelength ,~ ] = Get_angle_array (img_2,part_piece,extend);
-%% 方向场平滑处理    /   频率(波长)场平滑处理
+%% 方向场及波长场平滑处理
     filter_g_wavelength= fspecial('Gaussian',[3,3],3);
     wavelength = imfilter(wavelength,filter_g_wavelength,'replicate','same');
     filter_g = fspecial('Gaussian',[5,5],1);
     angle_array = pi .* angle_array ./ 90;
-    angle_sin = sin (angle_array);
+    angle_sin = sin(angle_array);
     angle_sin = imfilter(angle_sin,filter_g,'replicate','same');
     angle_cos = cos(angle_array);
     angle_cos = imfilter(angle_cos,filter_g,'replicate','same');
@@ -35,6 +30,8 @@ function [img, mask, T] = keypoint_extraction(imgpath)
     %脊线增强
     enhancement_pic = finger_enhance(img_2,mask_new,angle_array,wavelength,part_piece,extend);
 %     figure,imshow(enhancement_pic);
+
+%%获取细节点
     [img, result, mask] = keypoint_detection(enhancement_pic, mask);
 %     figure,imshow(img, []);
     index = round(result/part_piece);
